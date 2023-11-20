@@ -18,6 +18,7 @@ router.register(r'groups', views.GroupViewset)
 router.register(r'portfolios', views.PortfolioViewSet)
 router.register(r'transactions', views.TransactionViewSet)
 router.register(r'stocks', views.StockViewSet)
+router.register(r'stockportfolios', views.StockPortfolioViewSet)
 router.register(r'stocksadd', views.StockAddViewSet, basename="addstock")
 router.register(r'stocksdelete', views.StockDeleteViewSet, basename="deletestock")
 router.register(r'stocksupdate', views.StockUpdateViewSet, basename="updatestock")
@@ -30,5 +31,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-  
+    path('signup/', views.CreateUser.as_view(), name ='signup'),
 ]

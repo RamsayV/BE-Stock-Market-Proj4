@@ -5,6 +5,7 @@ import django.contrib.auth.password_validation as validation
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -21,7 +22,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Portfolio
-        fields = ['user', 'total_value']
+        fields = ['user','portfolio_name', 'total_value']
 
 class StockSerializer(serializers.ModelSerializer):
     class Meta:

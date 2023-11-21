@@ -9,6 +9,15 @@ class Portfolio(models.Model):
     portfolio_name = models.CharField(max_length=255, default='My Portfolio')
     total_value = models.DecimalField(max_digits=10, decimal_places=2)
 
+    # def update_total_value(self):
+    #     self.total_value = self.stockportfolio_set.aggregate(
+    #         total=Sum(F('quantity') * F('stock__market_price'))
+    #     )['total'] or 0
+    #     self.save()
+
+    def __str__(self):
+        return f"{self.portfolio_name}"
+
 class Stock(models.Model):
     ticker_symbol = models.CharField(max_length=10)
     company_name = models.CharField(max_length=255)
@@ -18,6 +27,7 @@ class Stock(models.Model):
     week_52_high = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     week_52_low = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     portfolios = models.ManyToManyField(Portfolio, through='StockPortfolio')
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.ticker_symbol} - {self.company_name}"
@@ -50,3 +60,5 @@ class StockPortfolio(models.Model):
 
     def __str__(self):
         return f"{self.quantity} shares of {self.stock} in {self.portfolio}"
+    
+ 

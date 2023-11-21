@@ -8,7 +8,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, permissions, generics,serializers
+
+
+
+# USER REGISTRATION TOKENS AND AUTHENTICATION
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -44,6 +48,8 @@ class GroupViewset(viewsets.ReadOnlyModelViewSet):
     serializer_class =  GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    # PORTFOLIO BACKEND LOGIC
+
 class PortfolioViewSet(viewsets.ModelViewSet):
     queryset = Portfolio.objects.all()
     serializer_class = PortfolioSerializer
@@ -51,11 +57,40 @@ class PortfolioViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+    
+
+class PortfolioAddViewSet(viewsets.ModelViewSet):
+    queryset = Portfolio.objects.all()
+    serializer_class = PortfolioSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+#  TRANSACTION LOGIC
+
 
 class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    # STOCKPORFTOLIO
+
+class StockPortfolioViewSet(viewsets.ModelViewSet):
+    queryset = StockPortfolio.objects.all()
+    serializer_class = StockPortfolioSerializer
+
+class StockPortfolioAddViewSet(viewsets.ModelViewSet):
+    queryset = StockPortfolio.objects.all()
+    serializer_class = StockPortfolioSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
+    
+    # STOCK CRUD AND LOGIC
 
 class StockViewSet(viewsets.ModelViewSet):
     serializer_class = StockSerializer
@@ -64,12 +99,11 @@ class StockViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Stock.objects.filter(portfolios__user=user)
+        return Stock.objects.filter(user_id_id=user)
 
-
-class StockPortfolioViewSet(viewsets.ModelViewSet):
-    queryset = StockPortfolio.objects.all()
-    serializer_class = StockPortfolioSerializer
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     return Stock.objects.filter(portfolios__user=user)
 
 class StockAddViewSet(viewsets.ModelViewSet):
     queryset = Stock.objects.all()
@@ -78,6 +112,19 @@ class StockAddViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
+
+    # def perform_create(self, serializer):
+    #     user = self.request.user
+
+        
+    #     if not Portfolio.objects.filter(user=user).exists():
+    #         raise serializers.ValidationError("You must create a portfolio before adding stocks.")
+
+        # If the user has a portfolio, create the stock
+        # serializer.save()
+
+        # portfolio = Portfolio.objects.filter(user=user).first()
+        # StockPortfolio.objects.create(stock=serializer.instance, portfolio=portfolio, user=user)
 
 class StockDeleteViewSet(viewsets.ModelViewSet):
     queryset = Stock.objects.all()

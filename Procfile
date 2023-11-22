@@ -1,1 +1,1 @@
-web: gurnicorn 'backend.wsgi'
+web: gurnicorn 'main_app'

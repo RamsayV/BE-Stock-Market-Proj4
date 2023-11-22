@@ -1,0 +1,1 @@
+web: gurnicorn 'backend.wsgi'

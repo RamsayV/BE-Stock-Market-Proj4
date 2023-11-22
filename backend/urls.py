@@ -20,7 +20,7 @@ router.register(r'portfoliosadd', views.PortfolioAddViewSet, basename="addportfo
 router.register(r'transactions', views.TransactionViewSet)
 router.register(r'stocks', views.StockViewSet)
 router.register(r'stockportfolios', views.StockPortfolioViewSet)
-router.register(r'addstockportfolios', views.StockPortfolioAddViewSet, basename="addstockportfolio")
+router.register(r'addstockportfolios', views.StockPortfolioAddViewSet, basename="addstockportfolios")
 router.register(r'stocksadd', views.StockAddViewSet, basename="addstock")
 router.register(r'stocksdelete', views.StockDeleteViewSet, basename="deletestock")
 router.register(r'stocksupdate', views.StockUpdateViewSet, basename="updatestock")

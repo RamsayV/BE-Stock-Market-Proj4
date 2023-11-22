@@ -36,7 +36,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'be-stock-market-proj4-production.up.railway.app',
-    'be-stock-market-proj4.railway.internal'
+    'be-stock-market-proj4.railway.internal',
+    "localhost",
+    "127.0.0.1"
+
 ]
 
 

@@ -18,11 +18,18 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'username']
 
 class PortfolioSerializer(serializers.ModelSerializer):
-    user = UserSerializer()  
+    user_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Portfolio
-        fields = ['user','portfolio_name', 'total_value']
+        fields = ['user_id', 'portfolio_name', 'total_value','id']
+
+    def create(self, validated_data):
+        user_id = validated_data.pop('user_id')
+        user = User.objects.get(id=user_id)
+        print(user)
+        portfolio = Portfolio.objects.create(user=user, **validated_data)
+        return portfolio
 
 class StockSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,12 +37,19 @@ class StockSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class StockPortfolioSerializer(serializers.ModelSerializer):
-    stock = StockSerializer(read_only=True)
-    portfolio = PortfolioSerializer(read_only=True)
+    user_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = StockPortfolio
-        fields = ['stock', 'user', 'portfolio', 'quantity']
+        fields = ['stock', 'user_id', 'portfolio', 'quantity']
+
+
+    def create(self, validated_data):
+        user_id = validated_data.pop('user_id')
+        user = User.objects.get(id=user_id)
+        print(user)
+        stockPortfolio = StockPortfolio.objects.create(user=user, **validated_data)
+        return  stockPortfolio
 
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:

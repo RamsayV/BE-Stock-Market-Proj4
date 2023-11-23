@@ -67,6 +67,23 @@ class PortfolioAddViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
+class PortfolioDeleteViewSet(viewsets.ModelViewSet):
+    queryset = Portfolio.objects.all()
+    serializer_class = PortfolioSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class PortfolioUpdateViewSet(viewsets.ModelViewSet):
+    queryset =Portfolio.objects.all()
+    serializer_class = PortfolioSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_update(self, serializer):
+        serializer.save()
 
 #  TRANSACTION LOGIC
 
@@ -113,18 +130,6 @@ class StockAddViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
 
-    # def perform_create(self, serializer):
-    #     user = self.request.user
-
-        
-    #     if not Portfolio.objects.filter(user=user).exists():
-    #         raise serializers.ValidationError("You must create a portfolio before adding stocks.")
-
-        # If the user has a portfolio, create the stock
-        # serializer.save()
-
-        # portfolio = Portfolio.objects.filter(user=user).first()
-        # StockPortfolio.objects.create(stock=serializer.instance, portfolio=portfolio, user=user)
 
 class StockDeleteViewSet(viewsets.ModelViewSet):
     queryset = Stock.objects.all()

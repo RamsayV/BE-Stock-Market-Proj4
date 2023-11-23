@@ -38,10 +38,14 @@ class StockSerializer(serializers.ModelSerializer):
 
 class StockPortfolioSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(write_only=True)
+    company_name = serializers.CharField(source='stock.company_name', read_only=True)
+    ticker_symbol = serializers.CharField(source='stock.ticker_symbol', read_only=True)
+    portfolio_name = serializers.CharField(source='portfolio.portfolio_name', read_only=True)
+
 
     class Meta:
         model = StockPortfolio
-        fields = ['stock', 'user_id', 'portfolio', 'quantity']
+        fields = ['stock', 'user_id', 'portfolio', 'quantity','company_name', 'ticker_symbol', 'portfolio_name']
 
 
     def create(self, validated_data):
@@ -50,6 +54,16 @@ class StockPortfolioSerializer(serializers.ModelSerializer):
         print(user)
         stockPortfolio = StockPortfolio.objects.create(user=user, **validated_data)
         return  stockPortfolio
+
+    # def create(self, validated_data):
+    #     stock_portfolio = StockPortfolio.objects.create(**validated_data)
+    #     return stock_portfolio
+
+    # def update(self, instance, validated_data):
+    #     instance.quantity = validated_data.get('quantity', instance.quantity)
+    #     instance.save()
+    #     return instance
+
 
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:

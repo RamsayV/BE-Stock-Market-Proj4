@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F, Sum
 from django.contrib.auth.models import User
 from django.conf import settings
 
@@ -9,11 +10,12 @@ class Portfolio(models.Model):
     portfolio_name = models.CharField(max_length=255, default='My Portfolio')
     total_value = models.DecimalField(max_digits=10, decimal_places=2)
 
-    # def update_total_value(self):
-    #     self.total_value = self.stockportfolio_set.aggregate(
-    #         total=Sum(F('quantity') * F('stock__market_price'))
-    #     )['total'] or 0
-    #     self.save()
+    def update_total_value(self):
+        total = self.stockportfolio_set.aggregate(
+            total_value=Sum(F('quantity') * F('stock__market_price'))
+        )['total_value']
+        self.total_value = total if total is not None else 0
+        self.save()
 
     def __str__(self):
         return f"{self.portfolio_name}"
@@ -61,4 +63,8 @@ class StockPortfolio(models.Model):
     def __str__(self):
         return f"{self.quantity} shares of {self.stock} in {self.portfolio}"
     
- 
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.portfolio:
+            self.portfolio.update_total_value()

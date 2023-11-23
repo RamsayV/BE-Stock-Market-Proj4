@@ -99,6 +99,13 @@ class StockPortfolioViewSet(viewsets.ModelViewSet):
     queryset = StockPortfolio.objects.all()
     serializer_class = StockPortfolioSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        portfolio_id = self.request.query_params.get('portfolio')
+        if portfolio_id is not None:
+            queryset = queryset.filter(portfolio_id=portfolio_id)
+        return queryset
+
 class StockPortfolioAddViewSet(viewsets.ModelViewSet):
     queryset = StockPortfolio.objects.all()
     serializer_class = StockPortfolioSerializer
